@@ -1,3 +1,10 @@
+#cs
+# Doubly Linked List in AutoIt
+#
+# @author genius257
+# @see https://medium.com/dev-blogs/ds-with-js-linked-lists-ii-3b387596e27e
+#ce
+
 #include <Memory.au3>
 
 $tagDoublyLinkedList = "PTR head;PTR tail;"
@@ -48,10 +55,36 @@ Func _doublyLinkedList_AppendAt($vDoublyLinkedList, $pos, $vItem)
     If $pos = 0 Then
         $tTailNode = DllStructCreate($tagDoublyLinkedListNode, $tDoublyLinkedList.tail)
         $tTailNode.next = $hNode
+
+    ;TODO
 EndFunc
 
+;TODO: Remove
+;TODO: RemoveAt
+;TODO: Reverse
+;TODO: Swap
+;TODO: IsEmpty
+;TODO: Length
+;TODO: Traverse
+;TODO: Display
+;TODO: Search
+
+#cs
+# Copies AutoIt struct to heap, for keeping data without storing the struct in a AutoIt variable
+#
+# @param struct $tStruct structure to copy to heap memory
+#ce
 Func __doublyLinkedList_StructToMem($tStruct)
     Local $hBytes = _MemGlobalAlloc(DllStructGetSize($tStruct), $GPTR)
     _MemMoveMemory(DllStructGetPtr($tStruct), $hBytes, DllStructGetSize($tStruct))
     Return $hBytes
+EndFunc
+
+#cs
+# Free memory with associated handle, allocated with doublyLinedList functions
+#
+# @param handle $hItem Memory pointer created with _MemGlobalAlloc
+#ce
+Func _doublyLinkedList_Release($hItem)
+    Return _MemGlobalFree($hItem)
 EndFunc
