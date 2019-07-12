@@ -45,21 +45,65 @@ EndFunc
 # @param struct|handle $vItem             A reference to a value, either by structure or by handle
 #ce
 Func _doublyLinkedList_AppendAt($vDoublyLinkedList, $pos, $vItem)
+    Local $fNode = __doublyLinkedList_Node
     Local $tDoublyLinkedList = IsDllStruct($vDoublyLinkedList) ? $vDoublyLinkedList : DllStructCreate($tagDoublyLinkedList, $vDoublyLinkedList)
     Local $current = $tDoublyLinkedList.head
     Local $counter = 1
     Local $hItem = IsDllStruct($vItem) ? __doublyLinkedList_StructToMem($vItem) : $vItem
     Local $hNode = __doublyLinkedList_StructToMem(DllStructCreate($tagDoublyLinkedListNode))
-    Local $tNode = DllStructCreate($tagDoublyLinkedListNode, $hNode)
+    Local $tNode = $fNode($hNode)
         $tNode.data = $hItem
     If $pos = 0 Then
-        $tTailNode = DllStructCreate($tagDoublyLinkedListNode, $tDoublyLinkedList.tail)
-        $tTailNode.next = $hNode
+        $tHeadNode = $fNode($tDoublyLinkedList.head)
+        $tHeadNode.previous = $hNode
+        $tNode.next = $tDoublyLinkedList.head
+        $tDoublyLinkedList.head = $hNode
+    Else
+        While $current
+            $current = $fNode($current).next
 
-    ;TODO
+            If $counter = $pos Then
+                $tNode.previous = $fNode($current).previous
+                Local $tPreviousNode = $fNode($fNode($current).previous)
+                $tPreviousNode.next = $hNode
+                $tNode.next = $current
+                Local $tCurrentNode = $fNode($current)
+                $tCurrentNode.previous = $hNode
+            EndIf
+            $counter+=1
+        WEnd
+    EndIf
 EndFunc
 
-;TODO: Remove
+Func _doublyLinkedList_Remove($vDoublyLinkedList, $hItem)
+    Local $fNode = __doublyLinkedList_Node
+    Local $tDoublyLinkedList = IsDllStruct($vDoublyLinkedList) ? $vDoublyLinkedList : DllStructCreate($tagDoublyLinkedList, $vDoublyLinkedList)
+    Local $current = $tDoublyLinkedList.head
+
+    While $current
+        If $fNode($current).data = $hItem Then
+            If $current = $tDoublyLinkedList.head And $current = $tDoublyLinkedList.tail Then
+                $tDoublyLinkedList.head = 0
+                $tDoublyLinkedList.tail = 0
+            ElseIf $current = $tDoublyLinkedList.head Then
+                $tDoublyLinkedList.head = $fNode($tDoublyLinkedList.head).next
+                Local $tHeadNode = $fNode($tDoublyLinkedList.head)
+                $tHeadNode.previous = 0
+            ElseIf $current = $tDoublyLinkedList.tail Then
+                $tDoublyLinkedList.tail = $fNode($tDoublyLinkedList.tail).previous
+                Local $tTailNode = $fNode($tDoublyLinkedList.tail)
+                $tTailNode.next = 0
+            Else
+                Local $tPreviousNode = $fNode($fNode($current).previous)
+                Local $tNextNode = $fNode($fNode($current).next)
+                $tPreviousNode.next = $fNode($current).next
+                $tNextNode.previous = $fNode($current).previous
+            EndIf
+        EndIf
+        $current = $fNode($current).next
+    WEnd
+EndFunc
+
 ;TODO: RemoveAt
 ;TODO: Reverse
 ;TODO: Swap
@@ -78,6 +122,18 @@ Func __doublyLinkedList_StructToMem($tStruct)
     Local $hBytes = _MemGlobalAlloc(DllStructGetSize($tStruct), $GPTR)
     _MemMoveMemory(DllStructGetPtr($tStruct), $hBytes, DllStructGetSize($tStruct))
     Return $hBytes
+EndFunc
+
+#cs
+# Initiates node struct from node handle
+#
+# @param struct|handle $hNode
+#
+# @return struct
+#ce
+Func __doublyLinkedList_Node($hNode)
+    If IsDllStruct($hNode) Then Return $hNode
+    Return DllStructCreate($tagDoublyLinkedListNode, $hNode)
 EndFunc
 
 #cs
