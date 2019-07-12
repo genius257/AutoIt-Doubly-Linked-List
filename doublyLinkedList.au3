@@ -187,7 +187,18 @@ Func _doublyLinkedList_Length($vDoublyLinkedList)
     Return $counter
 EndFunc
 
-;TODO: Traverse
+Func _doublyLinkedList_Traverse($vDoublyLinkedList, $fn)
+    Local $fNode = __doublyLinkedList_Node
+    Local $tDoublyLinkedList = IsDllStruct($vDoublyLinkedList) ? $vDoublyLinkedList : DllStructCreate($tagDoublyLinkedList, $vDoublyLinkedList)
+    Local $current = $tDoublyLinkedList.head
+    While $current
+        $tCurrent = $fNode($current)
+        $fn($tCurrent)
+        $current = $tCurrent.next
+    WEnd
+    Return True
+EndFunc
+
 ;TODO: Display
 ;TODO: Search
 
