@@ -149,7 +149,28 @@ Func _doublyLinkedList_Reverse($vDoublyLinkedList)
     $tDoublyLinkedList.head = $prev
 EndFunc
 
-;TODO: Swap
+Func _doublyLinkedList_Swap($vDoublyLinkedList, $nodeOne, $nodeTwo)
+    Local $fNode = __doublyLinkedList_Node
+    Local $tDoublyLinkedList = IsDllStruct($vDoublyLinkedList) ? $vDoublyLinkedList : DllStructCreate($tagDoublyLinkedList, $vDoublyLinkedList)
+    Local $current = $tDoublyLinkedList.head
+    Local $counter = 0
+    Local $firstNode
+    While $current
+        If $counter = $nodeOne Then
+            $firstNode = $current
+        ElseIf $counter = $nodeTwo Then
+            Local $tCurrent = $fNode($current)
+            Local $tFirstNode = $fNode($firstNode)
+            Local $temp = $tCurrent.data
+            $tCurrent.data = $tFirstNode.data
+            $tFirstNode.data = $temp
+        EndIf
+        $current = $fNode($current).next
+        $counter+=1
+    WEnd
+    return True
+EndFunc
+
 ;TODO: IsEmpty
 ;TODO: Length
 ;TODO: Traverse
