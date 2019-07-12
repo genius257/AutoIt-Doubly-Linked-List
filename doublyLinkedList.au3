@@ -14,6 +14,9 @@ $tagDoublyLinkedListNode = "PTR previous;PTR data;PTR next;"
 ;_MemVirtualAllocEx
 ;_WinAPI_CoTaskMemAlloc
 
+;NOTE: remove functions does currently not release the node memory
+;TODO: _doublyLinkedList_Swap breaks when nodeOne >= nodeTwo
+
 #cs
 # Append item to the list
 #
