@@ -211,8 +211,19 @@ Func _doublyLinkedList_TraverseReverse($vDoublyLinkedList, $fn)
     Return True
 EndFunc
 
-;TODO: Display
-;TODO: Search
+Func _doublyLinkedList_Search($vDoublyLinkedList, $hData)
+    Local $fNode = __doublyLinkedList_Node
+    Local $tDoublyLinkedList = IsDllStruct($vDoublyLinkedList) ? $vDoublyLinkedList : DllStructCreate($tagDoublyLinkedList, $vDoublyLinkedList)
+    Local $current = $tDoublyLinkedList.head
+    Local $counter = 0
+    While $current
+        Local $tCurrent = $fNode($current)
+        If $tCurrent.data = $hData Then Return $counter
+        $current = $tCurrent.next
+        $counter+=1
+    WEnd
+    Return False
+EndFunc
 
 #cs
 # Copies AutoIt struct to heap, for keeping data without storing the struct in a AutoIt variable
