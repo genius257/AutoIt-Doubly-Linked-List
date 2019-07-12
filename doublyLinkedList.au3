@@ -171,7 +171,10 @@ Func _doublyLinkedList_Swap($vDoublyLinkedList, $nodeOne, $nodeTwo)
     return True
 EndFunc
 
-;TODO: IsEmpty
+Func _doublyLinkedList_IsEmpty($vDoublyLinkedList)
+    Return _doublyLinkedList_Length($vDoublyLinkedList) < 1
+EndFunc
+
 ;TODO: Length
 ;TODO: Traverse
 ;TODO: Display
