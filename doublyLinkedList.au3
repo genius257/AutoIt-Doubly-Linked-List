@@ -104,7 +104,34 @@ Func _doublyLinkedList_Remove($vDoublyLinkedList, $hItem)
     WEnd
 EndFunc
 
-;TODO: RemoveAt
+Func _doublyLinkedList_RemoveAt($vDoublyLinkedList, $pos)
+    Local $fNode = __doublyLinkedList_Node
+    Local $tDoublyLinkedList = IsDllStruct($vDoublyLinkedList) ? $vDoublyLinkedList : DllStructCreate($tagDoublyLinkedList, $vDoublyLinkedList)
+    Local $current = $tDoublyLinkedList.head
+    Local $counter = 1
+    If $pos = 0 Then
+        $tDoublyLinkedList.head = $fNode($tDoublyLinkedList.head).next
+        $tHeadNode = $fNode($tDoublyLinkedList.head)
+        $tHeadNode.previous = 0
+    Else
+        While $current
+            $current = $fNode($current).next
+            If $current = $tDoublyLinkedList.tail Then
+                $tDoublyLinkedList.tail = $fNode($tDoublyLinkedList.tail).previous
+                Local $tTailNode = $fNode($tDoublyLinkedList.tail)
+                $tTailNode.next = 0
+            ElseIf $counter = $pos Then
+                Local $tPreviousNode = $fNode($fNode($current).previous)
+                $tPreviousNode.next = $fNode($current).next
+                Local $tNextNode = $fNode($fNode($current).next)
+                $tNextNode.previous = $fNode($current).previous
+                ExitLoop
+            EndIf
+            $counter+=1
+        WEnd
+    EndIf
+EndFunc
+
 ;TODO: Reverse
 ;TODO: Swap
 ;TODO: IsEmpty
