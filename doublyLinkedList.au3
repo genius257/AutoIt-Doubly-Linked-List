@@ -175,7 +175,18 @@ Func _doublyLinkedList_IsEmpty($vDoublyLinkedList)
     Return _doublyLinkedList_Length($vDoublyLinkedList) < 1
 EndFunc
 
-;TODO: Length
+Func _doublyLinkedList_Length($vDoublyLinkedList)
+    Local $fNode = __doublyLinkedList_Node
+    Local $tDoublyLinkedList = IsDllStruct($vDoublyLinkedList) ? $vDoublyLinkedList : DllStructCreate($tagDoublyLinkedList, $vDoublyLinkedList)
+    Local $current = $tDoublyLinkedList.head
+    Local $counter = 0
+    While $current
+        $counter+=1
+        $current = $fNode($current).next
+    WEnd
+    Return $counter
+EndFunc
+
 ;TODO: Traverse
 ;TODO: Display
 ;TODO: Search
