@@ -199,6 +199,18 @@ Func _doublyLinkedList_Traverse($vDoublyLinkedList, $fn)
     Return True
 EndFunc
 
+Func TraverseReverse($vDoublyLinkedList, $fn)
+    Local $fNode = __doublyLinkedList_Node
+    Local $tDoublyLinkedList = IsDllStruct($vDoublyLinkedList) ? $vDoublyLinkedList : DllStructCreate($tagDoublyLinkedList, $vDoublyLinkedList)
+    Local $current = $tDoublyLinkedList.tail
+    While $current
+        $tCurrent = $fNode($current)
+        $fn($tCurrent)
+        $current = $tCurrent.previous
+    WEnd
+    Return True
+EndFunc
+
 ;TODO: Display
 ;TODO: Search
 
